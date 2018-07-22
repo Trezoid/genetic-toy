@@ -1,7 +1,7 @@
 import re, random
 
 CHAR_LIST = list('abcdefghijklmnopqrstuvwxyz?. !')
-MAX_LENGTH = 1500
+MAX_LENGTH = 600
 
 class child:
     chars = []
