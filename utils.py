@@ -1,4 +1,5 @@
 import math, random
+import numpy as np
 import scores
 import breeder
 from genomes import child
@@ -13,6 +14,7 @@ class scorer:
     length_target = 0
 
     def __init__(self, target=280):
+        global wordList
         self.length_target = target
         if not len(wordList):
             f = open('words.txt', 'r')
@@ -20,6 +22,7 @@ class scorer:
                 wordList.add(line)
 
     def score_obj(self, obj):
+        global wordList
         words = obj.words()
         score = len(words) * scores.WORD_COUNT + len(obj.chars) * scores.CHAR_COUNT
         for word in words:
@@ -27,13 +30,13 @@ class scorer:
                 score += scores.REAL_WORD
             else:
                 score -= scores.NOT_WORD
-            if len(word) < 2:
+            if len(word) < 4:
                 score -= scores.VERY_SHORT
 
         if len(obj.string()) < self.length_target:
             score += scores.WITHIN_TARGET
         else:
-            score += (self.length_target - len(obj.string())) * (scores.CHAR_COUNT * 10)
+            score += (self.length_target - len(obj.string())) * (scores.CHAR_COUNT * 2)
         
         
         return score
@@ -62,7 +65,8 @@ class generation:
         else:
             new_gen = []
             top = []
-            keep_count = math.ceil(len(self.gen_list) / 100) * scores.KEEP_PERCENT
+            keep_count = scores.KEEP_PERCENT
+            #keep_count = math.ceil(len(self.gen_list) / 100) * scores.KEEP_PERCENT
             mute_count = math.ceil(len(self.gen_list) / 100) * scores.MUTATE_PERCENT
             generation = self.sort_gen(generation)
 
