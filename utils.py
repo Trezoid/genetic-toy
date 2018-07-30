@@ -17,12 +17,13 @@ class scorer:
         global wordList
         self.length_target = target
         if not len(wordList):
-            f = open('words.txt', 'r')
-            for line in f.readline():
-                wordList.add(line)
+            with open('/usr/share/dict/words', 'r') as f:
+                for line in f:
+                    wordList.add(line.strip())
 
     def score_obj(self, obj):
         global wordList
+        unique = set()
         words = obj.words()
         score = len(words) * scores.WORD_COUNT + len(obj.chars) * scores.CHAR_COUNT
         for word in words:
@@ -30,13 +31,18 @@ class scorer:
                 score += scores.REAL_WORD
             else:
                 score -= scores.NOT_WORD
-            if len(word) < 4:
+            if len(word) < scores.SHORT_WORD:
                 score -= scores.VERY_SHORT
+            if word in unique:
+                score -= scores.DUPLICATE_WORD
+            else:
+                unique.add(word)
+
 
         if len(obj.string()) < self.length_target:
             score += scores.WITHIN_TARGET
         else:
-            score += (self.length_target - len(obj.string())) * (scores.CHAR_COUNT * 2)
+            score += (scores.TARGET_SIZE - len(obj.string())) * 10 
         
         
         return score

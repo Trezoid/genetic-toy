@@ -1,9 +1,10 @@
 import re
 from numpy import random
+import scores
 
-CHAR_LIST = list('abcdefghijklmnopqrstuvwxyz?. !')
-MAX_LENGTH = 600
-WORD_FINDER = re.compile("\w[\w']+")
+CHAR_LIST = list('abcdefghijklmnopqrstuvwxyz ')
+MAX_LENGTH = scores.GENOME_SIZE
+WORD_FINDER = re.compile("[\w']+")
 
 class child:
     chars = []
